@@ -3,7 +3,7 @@ name: Release to GitHub Packages
 on:
   push:
     branches: [main]
-    paths: ["nova-vda5050/**"]
+    paths: ["src/**", "pyproject.toml"]
   release:
     types: [published]
 
