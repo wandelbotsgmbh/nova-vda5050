@@ -22,7 +22,6 @@ jobs:
           python-version: "3.12"
 
       - name: Build package
-        working-directory: nova-vda5050
         run: |
           python -m pip install build
           python -m build
@@ -31,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-dists
-          path: nova-vda5050/dist/
+          path: dist/
 
   publish:
     runs-on: ubuntu-latest
