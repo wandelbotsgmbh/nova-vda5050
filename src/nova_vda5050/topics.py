@@ -78,6 +78,10 @@ class TopicMapper:
     def nova_connection_nats(self, robot_model: str, robot_id: str) -> str:
         return self.nova_to_vda5050(robot_model, robot_id, "connection").nats_subject
 
+    def nova_factsheet_nats(self, robot_model: str, robot_id: str) -> str:
+        """Return the NATS subject for publishing VDA5050 factsheet."""
+        return self.nova_to_vda5050(robot_model, robot_id, "factsheet").nats_subject
+
     # ── VDA5050 -> Nova ──────────────────────────────────────────────────
 
     def parse_vda5050_nats_subject(self, subject: str) -> VDA5050Address | None:
