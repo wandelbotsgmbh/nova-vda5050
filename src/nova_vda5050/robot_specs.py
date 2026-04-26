@@ -213,6 +213,7 @@ def build_factsheet(
     robot_id: str,
     supported_actions: list[MobileRobotActionDef] | None = None,
     *,
+    simulated: bool = False,
     overrides: dict[str, Any] | None = None,
 ) -> FactsheetMessage:
     """Build a complete VDA5050 factsheet from the robot spec registry.
@@ -317,6 +318,7 @@ def build_factsheet(
             ],
         ),
         loadSpecification=LoadSpecification(),
+        nova={"simulated": simulated},
     )
 
 

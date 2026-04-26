@@ -285,3 +285,7 @@ class FactsheetMessage(Header):
     mobileRobotGeometry: MobileRobotGeometry = Field(default_factory=MobileRobotGeometry)
     loadSpecification: LoadSpecification = Field(default_factory=LoadSpecification)
     mobileRobotConfiguration: MobileRobotConfiguration | None = Field(default=None)
+    nova: dict[str, Any] | None = Field(
+        default=None,
+        description="Nova platform extension fields (not part of VDA5050 spec).",
+    )
