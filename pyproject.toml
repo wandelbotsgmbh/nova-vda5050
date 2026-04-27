@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nova-vda5050"
-version = "0.1.1"
+version = "0.1.2"
 description = "VDA5050 V3.0.0 Python library for the Wandelbots Nova platform"
 readme = "README.md"
 requires-python = ">=3.10"

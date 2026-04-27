@@ -8,6 +8,7 @@ from typing import Any
 from nova_vda5050.schemas import (
     AgvPosition,
     BatteryState,
+    Error,
     EStopState,
     Information,
     InfoLevel,
@@ -93,6 +94,15 @@ def transform_telemetry_to_state(
         fieldViolation=safety.get("field_violation", False),
     )
 
+    # Errors — accept pre-built Error objects or raw dicts
+    raw_errors = nova_telemetry.get("errors", [])
+    errors: list[Error] = []
+    for e in raw_errors:
+        if isinstance(e, Error):
+            errors.append(e)
+        elif isinstance(e, dict):
+            errors.append(Error(**e))
+
     # Order info
     order = nova_telemetry.get("order", {})
     informations: list[Information] = []
@@ -125,6 +135,7 @@ def transform_telemetry_to_state(
         batteryState=battery,
         operatingMode=operating_mode,
         safetyState=safety_state,
+        errors=errors,
         informations=informations,
     )
 

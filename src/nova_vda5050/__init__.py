@@ -12,6 +12,22 @@ from nova_vda5050.transform import transform_telemetry_to_state
 from nova_vda5050.commands import translate_order_to_nova, translate_instant_action_to_nova
 from nova_vda5050.manufacturers import MANUFACTURERS, get_manufacturer
 from nova_vda5050.robot_specs import ROBOT_SPECS, build_factsheet, action_def
+from nova_vda5050.errors import (
+    make_error,
+    map_estop,
+    map_operating_mode,
+    COMMUNICATION_LOST,
+    HARDWARE_FAULT,
+    ROBOT_FELL,
+    BATTERY_READ_FAILED,
+    SENSOR_FAULT,
+    LEASE_TIMEOUT,
+    MOTOR_FAULT,
+    SOFTWARE_ERROR,
+    COMMAND_FAILED,
+    ESTOP_ACTIVE,
+    CONNECTION_TIMEOUT,
+)
 
 __all__ = [
     "Header",
@@ -30,4 +46,19 @@ __all__ = [
     "ROBOT_SPECS",
     "build_factsheet",
     "action_def",
+    # Error/safety helpers
+    "make_error",
+    "map_estop",
+    "map_operating_mode",
+    "COMMUNICATION_LOST",
+    "HARDWARE_FAULT",
+    "ROBOT_FELL",
+    "BATTERY_READ_FAILED",
+    "SENSOR_FAULT",
+    "LEASE_TIMEOUT",
+    "MOTOR_FAULT",
+    "SOFTWARE_ERROR",
+    "COMMAND_FAILED",
+    "ESTOP_ACTIVE",
+    "CONNECTION_TIMEOUT",
 ]
