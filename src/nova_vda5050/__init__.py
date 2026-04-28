@@ -7,6 +7,16 @@ from nova_vda5050.schemas.instant_actions import InstantActionsMessage
 from nova_vda5050.schemas.connection import ConnectionMessage
 from nova_vda5050.schemas.visualization import VisualizationMessage
 from nova_vda5050.schemas.factsheet import FactsheetMessage
+from nova_vda5050.schemas.zone_set import (
+    ZoneSetMessage,
+    ZoneSet,
+    Zone,
+    ZoneType,
+    ZoneVertex,
+    ZoneAction,
+    DirectionLimitation,
+)
+from nova_vda5050.schemas.responses import ResponsesMessage, Response, GrantType
 from nova_vda5050.topics import TopicMapper
 from nova_vda5050.transform import transform_telemetry_to_state
 from nova_vda5050.commands import translate_order_to_nova, translate_instant_action_to_nova
@@ -37,6 +47,16 @@ __all__ = [
     "ConnectionMessage",
     "VisualizationMessage",
     "FactsheetMessage",
+    "ZoneSetMessage",
+    "ZoneSet",
+    "Zone",
+    "ZoneType",
+    "ZoneVertex",
+    "ZoneAction",
+    "DirectionLimitation",
+    "ResponsesMessage",
+    "Response",
+    "GrantType",
     "TopicMapper",
     "transform_telemetry_to_state",
     "translate_order_to_nova",

@@ -13,11 +13,14 @@ from pydantic import BaseModel, Field
 
 
 class OperatingMode(str, Enum):
+    STARTUP = "STARTUP"
     AUTOMATIC = "AUTOMATIC"
     SEMIAUTOMATIC = "SEMIAUTOMATIC"
+    INTERVENED = "INTERVENED"
     MANUAL = "MANUAL"
     SERVICE = "SERVICE"
     TEACHIN = "TEACHIN"
+    TEACH_IN = "TEACH_IN"  # V3 alias
 
 
 class EStopState(str, Enum):
@@ -34,6 +37,8 @@ class InfoLevel(str, Enum):
 
 class ErrorLevel(str, Enum):
     WARNING = "WARNING"
+    URGENT = "URGENT"
+    CRITICAL = "CRITICAL"
     FATAL = "FATAL"
 
 
@@ -42,6 +47,7 @@ class ActionStatus(str, Enum):
     INITIALIZING = "INITIALIZING"
     RUNNING = "RUNNING"
     PAUSED = "PAUSED"
+    RETRIABLE = "RETRIABLE"
     FINISHED = "FINISHED"
     FAILED = "FAILED"
 
@@ -49,6 +55,7 @@ class ActionStatus(str, Enum):
 class BlockingType(str, Enum):
     NONE = "NONE"
     SOFT = "SOFT"
+    SINGLE = "SINGLE"
     HARD = "HARD"
 
 
@@ -114,6 +121,109 @@ class BatteryState(BaseModel):
 class SafetyState(BaseModel):
     eStop: EStopState = Field(default=EStopState.NONE)
     fieldViolation: bool = Field(default=False)
+
+    # V3 alias
+    activeEmergencyStop: EStopState | None = Field(default=None)
+
+
+# ── V3 position / power models ──────────────────────────────────────────────
+
+
+class MobileRobotPosition(BaseModel):
+    """V3 position model — replaces AgvPosition."""
+
+    x: float = Field(default=0.0, description="X position in meters")
+    y: float = Field(default=0.0, description="Y position in meters")
+    theta: float = Field(default=0.0, description="Orientation in radians")
+    mapId: str = Field(default="default", description="Map identifier")
+    localized: bool = Field(default=True, description="True if position is trusted")
+    localizationScore: float | None = Field(default=None, ge=0.0, le=1.0)
+    deviationRange: float | None = Field(default=None, ge=0.0)
+
+
+class PowerSupply(BaseModel):
+    """V3 power supply — replaces BatteryState."""
+
+    stateOfCharge: float = Field(default=0.0, ge=0, le=100, description="State of charge in %")
+    batteryVoltage: float | None = Field(default=None)
+    batteryCurrent: float | None = Field(default=None, description="Current in Ampere")
+    batteryHealth: float | None = Field(default=None, ge=0, le=100)
+    charging: bool = Field(default=False)
+    range: float | None = Field(default=None, ge=0, description="Estimated reach in meters")
+
+
+class MapState(BaseModel):
+    """Map stored on the robot, reported in state."""
+
+    mapId: str
+    mapVersion: str
+    mapStatus: str = Field(description="ENABLED or DISABLED")
+    mapDescriptor: str | None = None
+
+
+class ZoneSetState(BaseModel):
+    """Zone set stored on the robot, reported in state."""
+
+    zoneSetId: str
+    mapId: str
+    zoneSetStatus: str = Field(description="ENABLED or DISABLED")
+
+
+class ControlPoint(BaseModel):
+    x: float
+    y: float
+    weight: float | None = None
+
+
+class Trajectory(BaseModel):
+    degree: int | None = None
+    knotVector: list[float] | None = None
+    controlPoints: list[ControlPoint] = Field(default_factory=list)
+
+
+class PlannedPath(BaseModel):
+    trajectory: Trajectory
+    traversedNodes: list[str] = Field(default_factory=list)
+
+
+class IntermediatePathPoint(BaseModel):
+    x: float
+    y: float
+    theta: float | None = None
+    eta: str = Field(description="ISO 8601 ETA")
+
+
+class IntermediatePath(BaseModel):
+    polyline: list[IntermediatePathPoint] = Field(default_factory=list)
+
+
+class ZoneRequestType(str, Enum):
+    ACCESS = "ACCESS"
+    REPLANNING = "REPLANNING"
+
+
+class RequestStatus(str, Enum):
+    REQUESTED = "REQUESTED"
+    GRANTED = "GRANTED"
+    REVOKED = "REVOKED"
+    EXPIRED = "EXPIRED"
+
+
+class ZoneRequest(BaseModel):
+    requestId: str
+    requestType: ZoneRequestType
+    zoneId: str
+    zoneSetId: str
+    requestStatus: RequestStatus
+    trajectory: Trajectory | None = None
+
+
+class EdgeRequest(BaseModel):
+    requestId: str
+    requestType: str = "CORRIDOR"
+    edgeId: str
+    sequenceId: int
+    requestStatus: RequestStatus
 
 
 class ActionParameter(BaseModel):

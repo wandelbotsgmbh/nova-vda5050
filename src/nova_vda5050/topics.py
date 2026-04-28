@@ -10,11 +10,20 @@ VDA5050_TOPIC_PREFIX = "vda5050/v3"
 VDA5050_NATS_PREFIX = "vda5050.v3"
 
 # VDA5050 message types
-MESSAGE_TYPES = ("state", "visualization", "connection", "order", "instantActions", "factsheet")
+MESSAGE_TYPES = (
+    "state",
+    "visualization",
+    "connection",
+    "order",
+    "instantActions",
+    "factsheet",
+    "zoneSet",
+    "responses",
+)
 
-# Inbound = FMS -> Robot (order, instantActions)
-INBOUND_TYPES = {"order", "instantActions"}
-# Outbound = Robot -> FMS (state, visualization, connection)
+# Inbound = FMS -> Robot (order, instantActions, zoneSet, responses)
+INBOUND_TYPES = {"order", "instantActions", "zoneSet", "responses"}
+# Outbound = Robot -> FMS (state, visualization, connection, factsheet)
 OUTBOUND_TYPES = {"state", "visualization", "connection", "factsheet"}
 
 
@@ -125,6 +134,14 @@ class TopicMapper:
 
     def vda5050_instant_actions_subscribe(self, manufacturer: str, serial: str) -> str:
         return f"{VDA5050_NATS_PREFIX}.{manufacturer}.{serial}.instantActions"
+
+    def vda5050_zone_set_subject(self, manufacturer: str, serial: str) -> str:
+        """NATS subject for publishing VDA5050 zone set to a robot."""
+        return f"{VDA5050_NATS_PREFIX}.{manufacturer}.{serial}.zoneSet"
+
+    def vda5050_responses_subject(self, manufacturer: str, serial: str) -> str:
+        """NATS subject for publishing VDA5050 responses to a robot."""
+        return f"{VDA5050_NATS_PREFIX}.{manufacturer}.{serial}.responses"
 
     def vda5050_inbound_wildcard(self) -> str:
         """Wildcard subject to receive all VDA5050 inbound messages."""

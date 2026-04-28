@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from nova_vda5050.schemas import AgvPosition, Velocity
+from nova_vda5050.schemas import (
+    AgvPosition,
+    IntermediatePath,
+    MobileRobotPosition,
+    PlannedPath,
+    Velocity,
+)
 
 
 class VisualizationMessage(BaseModel):
@@ -17,9 +23,17 @@ class VisualizationMessage(BaseModel):
     manufacturer: str
     serialNumber: str
 
-    # Position
-    agvPosition: AgvPosition | None = None
+    # V3 reference back to the state message this visualization relates to
+    referenceStateHeaderId: int | None = None
+
+    # Position — V3 uses mobileRobotPosition, keep agvPosition for compat
+    mobileRobotPosition: MobileRobotPosition | None = None
+    agvPosition: AgvPosition | None = None  # V2 compat
     velocity: Velocity | None = None
+
+    # Path (V3)
+    plannedPath: PlannedPath | None = None
+    intermediatePath: IntermediatePath | None = None
 
     # Order context
     orderId: str = ""
